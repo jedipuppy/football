@@ -1,0 +1,10 @@
+div.canvas {
+  width: 600px;
+  height: 600px;
+  border: 1px;
+}
+
+svg.canvas {
+  height: 100%;
+
+}

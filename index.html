@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+  <!-- jquery  -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.js"></script>
+  <!-- snap.js  -->
+  <script src="./assets/js/snap.svg-min.js"></script>
+  <!-- football-voronoi-diagram-core.js" -->
+  <script src="./assets/js/football-voronoi-diagram-core.js"></script>
+  <!-- semantic.css  -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+  <!-- semantic.js  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
+
+</head>
+
+<body>
+  <div class="canvas">
+    <svg class="canvas"></svg>
+  </div>
+  <div class="ui large buttons">
+    <button class="ui button" id="attack" onclick="ChangeSide()">Attack</button>
+    <div class="or"></div>
+    <button class="ui button" id="defense" onclick="ChangeSide()">Deffense</button>
+  </div>
+  <div class="ui segment">
+    <label>ボールのスピード </label> <input style="width:600px;" type="range" value="3" min="2" max="10" step="1" oninput="RefreshTerritory(this.value)">
+  </div>
+</body>
