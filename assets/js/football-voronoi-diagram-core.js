@@ -1,5 +1,8 @@
 // 設定値
-const AREASIZE = 600;
+const AREAWIDTH = 400;
+const AREAHEIGHT = 800;
+const GOALWIDTH = 100;
+const GOALHEIGHT = 20;
 const COLOR_RED = '#F45D52';
 const COLOR_BLUE = '#465B73';
 const COLOR_AQUA = '#49A1DE';
@@ -7,7 +10,7 @@ const COLOR_GREEN = '#f5f5dc';
 const COLOR_BLACK = '#696969';
 const PLAYERRADIUS = 10;
 const BALLRADIUS = 10;
-let ball_speed = 3;
+let ball_speed = 6;
 let player_speed = 1;
 let players = [];
 let territorys = [];
@@ -26,14 +29,19 @@ window.onload = function () {
 function init() {
 
 
-GenerateBackground();
+  GenerateBackground();
 
   // 指定した要素を取得する
   let canvas = document.querySelector('.canvas');
   snap_obj.prependTo(canvas);
   //ballを配置
-  GenerateBall(80, 120);
-
+  GenerateBall(AREAWIDTH / 2, 20);
+  side = -1;
+  GeneratePlayer(AREAWIDTH / 3, AREAHEIGHT / 2);
+  GeneratePlayer(2 * AREAWIDTH / 3, AREAHEIGHT / 2);
+  side = 1;
+  GeneratePlayer(AREAWIDTH / 3, AREAHEIGHT / 3);
+  GeneratePlayer(2 * AREAWIDTH / 3, AREAHEIGHT / 3);
   //clickするとプレイヤーを追加する
   snap_obj.click(function (e) {
     if (Snap.getElementByPoint(e.clientX, e.clientY).objtype !== 'player' && Snap.getElementByPoint(e.clientX, e.clientY).objtype !== 'ball') {
@@ -111,13 +119,14 @@ function GenerateTerritory(ball_x, ball_y, player_x, player_y, id, side, fresh_f
     });
   }
   players[id].before(territorys[id]);
-  if (players[id].side === -1) {
-    CoverLine(ball_x, ball_y, apollonius_x, apollonius_y, apollonius_r, id, fresh_flag);
+  if (players[id].side === 1) {
+    CoverLine(AREAWIDTH / 2, AREAHEIGHT, apollonius_x, apollonius_y, apollonius_r, id, fresh_flag, side);
+  } else {
+    CoverLine(ball_x, ball_y, apollonius_x, apollonius_y, apollonius_r, id, fresh_flag, side);
   }
-
 }
 
-function CoverLine(ball_x, ball_y, apollonius_x, apollonius_y, apollonius_r, id, fresh_flag) {
+function CoverLine(ball_x, ball_y, apollonius_x, apollonius_y, apollonius_r, id, fresh_flag, side) {
   let dx = ball_x - apollonius_x;
   let dy = ball_y - apollonius_y;
   let l2 = dx * dx + dy * dy;
@@ -126,23 +135,36 @@ function CoverLine(ball_x, ball_y, apollonius_x, apollonius_y, apollonius_r, id,
     let sqrtD = Math.sqrt(D);
     let a = apollonius_r * (apollonius_r * dx + sqrtD * dy) / l2;
     let b = apollonius_r * (apollonius_r * dy - sqrtD * dx) / l2;
-    let d = AREASIZE * AREASIZE / Math.sqrt(a * a + b * b);
+    let d = AREAWIDTH * AREAWIDTH / Math.sqrt(a * a + b * b);
     let va = b * d;
     let vb = -a * d;
-    line_temp = snap_obj.line(a + apollonius_x, b + apollonius_y, a + apollonius_x + va, b + apollonius_y + vb).attr({
-      stroke: COLOR_BLUE,
-      strokeWidth: 2
-    });
+
 
     let a2 = apollonius_r * (apollonius_r * dx - sqrtD * dy) / l2;
     let b2 = apollonius_r * (apollonius_r * dy + sqrtD * dx) / l2;
-    let d2 = AREASIZE * AREASIZE / Math.sqrt(a2 * a2 + b2 * b2);
+    let d2 = AREAWIDTH * AREAWIDTH / Math.sqrt(a2 * a2 + b2 * b2);
     let va2 = b2 * d2;
     let vb2 = -a2 * d2;
-    line_temp2 = snap_obj.line(a2 + apollonius_x - va2, b2 + apollonius_y - vb2, a2 + apollonius_x, b2 + apollonius_y).attr({
-      stroke: COLOR_BLUE,
-      strokeWidth: 2
-    });
+    if (side == 1) {
+      line_temp = snap_obj.line(a + apollonius_x, b + apollonius_y, AREAWIDTH / 2, AREAHEIGHT).attr({
+        stroke: COLOR_RED,
+        strokeWidth: 2,
+      });
+      line_temp2 = snap_obj.line(a2 + apollonius_x, b2 + apollonius_y, AREAWIDTH / 2, AREAHEIGHT).attr({
+        stroke: COLOR_RED,
+        strokeWidth: 2
+      });
+    } else {
+      line_temp = snap_obj.line(a + apollonius_x, b + apollonius_y, a + apollonius_x + va, b + apollonius_y + vb).attr({
+        stroke: COLOR_BLUE,
+        strokeWidth: 2
+      });
+      line_temp2 = snap_obj.line(a2 + apollonius_x - va2, b2 + apollonius_y - vb2, a2 + apollonius_x, b2 + apollonius_y).attr({
+        stroke: COLOR_BLUE,
+        strokeWidth: 2
+      });
+    }
+
 
 
 
@@ -172,34 +194,35 @@ function CalcApollonius(ball_x, ball_y, player_x, player_y) {
 }
 
 function GenerateBackground() {
-    // Snapオブジェクトを作成しサイズも指定
-    snap_obj = Snap(600, 600);
-    background = snap_obj.rect(0,0,AREASIZE,AREASIZE).attr({
-      fill: COLOR_GREEN,
-      stroke: COLOR_BLACK,
-      strokeWidth: 2,
-    });
-    field_line = []
-    field_line[0]=snap_obj.line(0,AREASIZE/2,AREASIZE,AREASIZE/2).attr({
-      fill: COLOR_GREEN,
-      stroke: COLOR_BLACK,
-      strokeWidth: 2,
-    });;
-    field_line[1]=snap_obj.line(AREASIZE/2,0,AREASIZE/2,AREASIZE,).attr({
-      fill: COLOR_GREEN,
-      stroke: COLOR_BLACK,
-      strokeWidth: 2,
-    });;
+  // Snapオブジェクトを作成しサイズも指定
+  snap_obj = Snap(AREAWIDTH, AREAHEIGHT);
+  background = snap_obj.rect(0, 0, AREAWIDTH, AREAHEIGHT).attr({
+    fill: COLOR_GREEN,
+    stroke: COLOR_BLACK,
+    strokeWidth: 2,
+  });
+  field_line = []
+  field_line[0] = snap_obj.line(0, AREAHEIGHT / 2, AREAWIDTH, AREAHEIGHT / 2).attr({
+    fill: COLOR_GREEN,
+    stroke: COLOR_BLACK,
+    strokeWidth: 2,
+  });;
+  background = snap_obj.rect(AREAWIDTH / 2 - GOALWIDTH / 2, AREAHEIGHT - GOALHEIGHT, GOALWIDTH, GOALHEIGHT).attr({
+    fill: COLOR_BLACK,
+    stroke: COLOR_BLACK,
+    strokeWidth: 2,
+    fillOpacity: 0.5
+  });
 }
 
 function RemovePlayer(x, y) {
   remove_player = Snap.getElementByPoint(x, y);
   console.log(remove_player)
-  if(remove_player.side === -1){
-    coverlines[remove_player.id][0].remove();
-    coverlines[remove_player.id][1].remove();
-    coverlines.splice(remove_player.id, 1);
-  }
+
+  coverlines[remove_player.id][0].remove();
+  coverlines[remove_player.id][1].remove();
+  coverlines.splice(remove_player.id, 1);
+
   remove_player.remove();
 
   players.splice(remove_player.id, 1);
