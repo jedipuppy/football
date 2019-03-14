@@ -1,8 +1,7 @@
 // 設定値
 const AREAWIDTH = 800;
 const AREAHEIGHT = 400;
-const GOALWIDTH = 20;
-const GOALHEIGHT = 100;
+const GOALRADIUS = 50;
 const COLOR_RED = '#F45D52';
 const COLOR_BLUE = '#465B73';
 const COLOR_AQUA = '#49A1DE';
@@ -227,10 +226,12 @@ function GenerateBackground() {
     stroke: COLOR_BLACK,
     strokeWidth: 2,
   });;
-  background = snap_obj.rect(AREAWIDTH - GOALWIDTH, AREAHEIGHT / 2 - GOALHEIGHT / 2, GOALWIDTH, GOALHEIGHT).attr({
+  background = snap_obj.circle(0, AREAHEIGHT / 2, GOALRADIUS).attr({
     fill: COLOR_BLACK,
-    stroke: COLOR_BLACK,
-    strokeWidth: 2,
+    fillOpacity: TERRITORY_OPACITY
+  });
+  background = snap_obj.circle(AREAWIDTH, AREAHEIGHT / 2, GOALRADIUS).attr({
+    fill: COLOR_BLACK,
     fillOpacity: TERRITORY_OPACITY
   });
 }
