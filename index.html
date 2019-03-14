@@ -13,18 +13,38 @@
   <!-- semantic.js  -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
 
+  <!-- semantic range  -->
+  <link rel="stylesheet" type="text/css" href="./assets/range/css/rSlider.min.css">
+  <script src="./assets/range/js/rSlider.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="./assets/css/custom.css">
 </head>
 
 <body>
-  <div class="canvas">
-    <svg class="canvas"></svg>
-  </div>
-  <div class="ui large buttons">
-    <button class="ui button" id="attack" onclick="ChangeSide()">Attack</button>
-    <div class="or"></div>
-    <button class="ui button" id="defense" onclick="ChangeSide()">Deffense</button>
+  <div class=" ui container">
+    <div class="ui segment canvas">
+      <svg class="canvas"></svg>
+    </div>
+
+    <div class="ui segment">
+      <label>ボールのスピード</label>
+      <input type="text" id="speed-slider" class="speed-slider" />
+    </div>
   </div>
   <div class="ui segment">
-    <label>ボールのスピード </label> <input style="width:600px;" type="range" value="6" min="2" max="10" step="1" oninput="RefreshTerritory(this.value)">
+    <p>プレイヤー追加機能</p>
+    <div class="ui large buttons">
+
+      <button class="ui button" id="off" onclick="ChangeSide(0)" autofocus>追加機能オフ</button>
+      <div class="or"></div>
+      <button class="ui button" id="attack" onclick="ChangeSide(1)">アタッカーを追加</button>
+      <div class="or"></div>
+      <button class="ui button" id="defense" onclick="ChangeSide(2)">ディフェンスを追加</button>
+
+    </div>
+  </div>
+  <div class="ui segment">
+    <p>画像を保存する</p>
+    <a href="#" class="ui button" id="save" download="football-area.svg" onclick="Save()">SVG形式で画像を保存</a>
   </div>
 </body>

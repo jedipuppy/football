@@ -1,10 +1,36 @@
+div.container {
+  width: 800px;
+  margin: 0px;
+  padding: 0px;
+}
+
 div.canvas {
-  width: 600px;
-  height: 1200px;
-  border: 1px;
+  width: 800px;
+  height: 400px;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 
 svg.canvas {
   height: 100%;
 
+}
+
+body {
+  width: 800px;
+}
+
+#attack:focus {
+  background-color: #F45D52;
+  color: white;
+}
+
+#defense:focus {
+  background-color: #465B73;
+  color: white;
+}
+
+#off:focus {
+  background-color: gray;
+  color: white;
 }
